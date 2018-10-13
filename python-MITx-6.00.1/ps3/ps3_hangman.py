@@ -51,7 +51,13 @@ def isWordGuessed(secretWord, lettersGuessed):
       False otherwise
     '''
     # FILL IN YOUR CODE HERE...
-
+    for ch in secretWord:
+        if ch not in lettersGuessed:
+            gessed=False
+            break
+        else:
+            gessed=True
+    return gessed  
 
 
 def getGuessedWord(secretWord, lettersGuessed):
@@ -62,17 +68,31 @@ def getGuessedWord(secretWord, lettersGuessed):
       what letters in secretWord have been guessed so far.
     '''
     # FILL IN YOUR CODE HERE...
+    strTemp=''
+    for ch in secretWord:
+        if ch in lettersGuessed:
+            strTemp+=ch
+        else:
+            strTemp+="_ "
+    
+    return strTemp
 
-
-
+import string  # to get ascii letters
 def getAvailableLetters(lettersGuessed):
     '''
     lettersGuessed: list, what letters have been guessed so far
     returns: string, comprised of letters that represents what letters have not
       yet been guessed.
     '''
+        # FILL IN YOUR CODE HERE...
+    listAllChar=list(string.ascii_lowercase)
+    for ch in lettersGuessed:
+        if ch in listAllChar:
+            listAllChar.remove(ch)
+    return ''.join(listAllChar)
+
     # FILL IN YOUR CODE HERE...
-    
+
 
 def hangman(secretWord):
     '''
@@ -95,7 +115,16 @@ def hangman(secretWord):
     Follows the other limitations detailed in the problem write-up.
     '''
     # FILL IN YOUR CODE HERE...
-
+    secretWord='antonio' # use chooseWord(wordlist) 
+                         #when done testing
+                             
+    while True:
+        print("Secret word contains " + str(len(secretWord)) + "-"*len(secretWord))
+        guessedLetter=input("Please guess a letter")
+        if guessedLetter in getAvailableLetters:
+            
+        
+        
 
 
 
