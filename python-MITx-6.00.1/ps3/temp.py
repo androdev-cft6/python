@@ -53,10 +53,16 @@ def getAvailableLetters(lettersGuessed):
             listAllChar.remove(ch)
     return ''.join(listAllChar)
 
+secretWord = '' 
 lettersGuessed = ['e', 'i', 'k', 'p', 'r', 's']
 print(getAvailableLetters(lettersGuessed))
 
+if not isWordGuessed(secretWord, lettersGuessed):
+    print("guessed wrong")
+    
+else:
+    print("guessed right")
 
-#secretWord = 'apple' 
+
 #lettersGuessed = ['e', 'i', 'w', 'l', '', 's', 'a', 'p']
 #print(getGuessedWord(secretWord, lettersGuessed))

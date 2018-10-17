@@ -50,14 +50,15 @@ def isWordGuessed(secretWord, lettersGuessed):
     returns: boolean, True if all the letters of secretWord are in lettersGuessed;
       False otherwise
     '''
-    # FILL IN YOUR CODE HERE...
+    # FILL IN YOUR CODE HERE...   
     for ch in secretWord:
         if ch not in lettersGuessed:
             gessed=False
             break
         else:
             gessed=True
-    return gessed  
+    return gessed      
+
 
 
 def getGuessedWord(secretWord, lettersGuessed):
@@ -114,16 +115,45 @@ def hangman(secretWord):
 
     Follows the other limitations detailed in the problem write-up.
     '''
-    # FILL IN YOUR CODE HERE...
-    secretWord='antonio' # use chooseWord(wordlist) 
-                         #when done testing
+    # FILL IN YOUR CODE HERE...    
+                         
+    lettersGuessed=[]
+    MAX_TRIES = 8
+    mistakesMade=0
+    availableLetters=getAvailableLetters(lettersGuessed) 
+    
+    print("Welcome to the game, Hangman!")
+    print("I'm thinking of a word that is " + str(len(secretWord)) + 
+          " letters long")    
+                                
                              
     while True:
-        print("Secret word contains " + str(len(secretWord)) + "-"*len(secretWord))
-        guessedLetter=input("Please guess a letter")
-        if guessedLetter in getAvailableLetters:
+        print("\n" +"-"*10 + "\n")
+        print("You have " + str(MAX_TRIES-mistakesMade) + " guessed left")
+        print("Available letters: " + availableLetters)
+        guessedLetter=input("Please guess a letter -> ")
+        while guessedLetter in lettersGuessed:
+            print("Oops, you've already guessed this letter " +
+                  getGuessedWord(secretWord, lettersGuessed))
+            print("Available Letters: " + availableLetters)
+            guessedLetter=input("Please guess a letter ")
             
-        
+        if guessedLetter in secretWord:
+            lettersGuessed.append(guessedLetter)
+            availableLetters=getAvailableLetters(lettersGuessed)
+            guessedWord=getGuessedWord(secretWord, lettersGuessed)
+            print("Good guess " + guessedWord)
+        else:
+            mistakesMade+=1
+            print("Oops, you guessed wrong. " + guessedWord)
+            
+        if mistakesMade>=MAX_TRIES:
+            print("You lost. Secret word was: " + secretWord)
+            print("Game over!")
+            break
+    if isWordGuessed(secretWord,lettersGuessed):
+        print("You guessed right" + guessedWord)
+        print("You won!")
         
 
 
@@ -135,4 +165,6 @@ def hangman(secretWord):
 # secretWord while you're testing)
 
 # secretWord = chooseWord(wordlist).lower()
-# hangman(secretWord)
+secretWord='antonio' # use chooseWord(wordlist) 
+                         #when done testing            
+hangman(secretWord)
