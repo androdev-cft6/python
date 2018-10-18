@@ -125,13 +125,15 @@ def hangman(secretWord):
     print("Welcome to the game, Hangman!")
     print("I'm thinking of a word that is " + str(len(secretWord)) + 
           " letters long")    
+    print(secretWord)
                                 
                              
-    while True:
+    while not isWordGuessed(secretWord, lettersGuessed):
         print("\n" +"-"*10 + "\n")
         print("You have " + str(MAX_TRIES-mistakesMade) + " guessed left")
         print("Available letters: " + availableLetters)
-        guessedLetter=input("Please guess a letter -> ")
+        guessed=input("Please guess a letter -> ")
+        guessedLetter=guessed.lower()
         while guessedLetter in lettersGuessed:
             print("Oops, you've already guessed this letter " +
                   getGuessedWord(secretWord, lettersGuessed))
@@ -152,7 +154,7 @@ def hangman(secretWord):
             print("Game over!")
             break
     if isWordGuessed(secretWord,lettersGuessed):
-        print("You guessed right" + guessedWord)
+        print("You guessed right! -> " + guessedWord)
         print("You won!")
         
 
@@ -164,7 +166,7 @@ def hangman(secretWord):
 # and run this file to test! (hint: you might want to pick your own
 # secretWord while you're testing)
 
-# secretWord = chooseWord(wordlist).lower()
-secretWord='antonio' # use chooseWord(wordlist) 
+secretWord = chooseWord(wordlist).lower()
+#secretWord='antonio' # use chooseWord(wordlist) 
                          #when done testing            
 hangman(secretWord)
