@@ -94,8 +94,17 @@ def getAvailableLetters(lettersGuessed):
 
     # FILL IN YOUR CODE HERE...
 
+def selectLevel():
+    print("There are three difficulty levels, Please choose one")
+    level=input("Easy-1 Medium-2 Advanced-3 ==> ")
+    return int(level)
+    
+
 
 def hangman(secretWord):
+    import winsound
+    import time
+    from PIL import Image
     '''
     secretWord: string, the secret word to guess.
 
@@ -118,50 +127,65 @@ def hangman(secretWord):
     # FILL IN YOUR CODE HERE...    
                          
     lettersGuessed=[]
-    MAX_TRIES = 8
+    level=selectLevel()
+    
+    if level==1:
+        MAX_TRIES=30
+    elif level==2:
+        MAX_TRIES=len(secretWord)*2
+    elif level==3:
+        MAX_TRIES=len(secretWord)
+    else:
+        MAX_TRIES=10
+    
     mistakesMade=0
     availableLetters=getAvailableLetters(lettersGuessed) 
+    guessedWord=getGuessedWord(secretWord, lettersGuessed)
     
     print("Welcome to the game, Hangman!")
     print("I'm thinking of a word that is " + str(len(secretWord)) + 
           " letters long")    
+
     print(secretWord)
-                                
                              
     while not isWordGuessed(secretWord, lettersGuessed):
-        print("\n" +"-"*10 + "\n")
+        print("\n" +"-"*50 + "\n")
         print("You have " + str(MAX_TRIES-mistakesMade) + " guessed left")
         print("Available letters: " + availableLetters)
         guessed=input("Please guess a letter -> ")
         guessedLetter=guessed.lower()
-        while guessedLetter in lettersGuessed:
-            print("Oops, you've already guessed this letter " +
+        
+        if guessedLetter in lettersGuessed:
+            print("Oops, you've already guessed this letter \n" +
                   getGuessedWord(secretWord, lettersGuessed))
-            print("Available Letters: " + availableLetters)
-            guessedLetter=input("Please guess a letter ")
-            
+        
+        lettersGuessed.append(guessedLetter)
+        availableLetters=getAvailableLetters(lettersGuessed)
+                    
         if guessedLetter in secretWord:
-            lettersGuessed.append(guessedLetter)
-            availableLetters=getAvailableLetters(lettersGuessed)
             guessedWord=getGuessedWord(secretWord, lettersGuessed)
-            print("Good guess " + guessedWord)
+            print("Good guess \n" + guessedWord)
+            winsound.MessageBeep(winsound.MB_ICONASTERISK)
         else:
             mistakesMade+=1
-            print("Oops, you guessed wrong. " + guessedWord)
-            
+            print("Oops, you guessed wrong. \n" + guessedWord)
+            winsound.MessageBeep(winsound.MB_ICONHAND)
+
+                                        
         if mistakesMade>=MAX_TRIES:
-            print("You lost. Secret word was: " + secretWord)
+            print("\nYou lost. Secret word was: " + secretWord)
             print("Game over!")
+            time.sleep(1.5)
+            winsound.PlaySound("soundSadtrombone.wav",winsound.SND_ASYNC)  
+            Image.open("hangman.jpg").show()
             break
     if isWordGuessed(secretWord,lettersGuessed):
         print("You guessed right! -> " + guessedWord)
         print("You won!")
+        winsound.PlaySound("soundTaDa.wav",winsound.SND_ASYNC)
+        time.sleep(1.5)
+        Image.open("fireworks.jpg").show()
         
-
-
-
-
-
 # When you've completed your hangman function, uncomment these two lines
 # and run this file to test! (hint: you might want to pick your own
 # secretWord while you're testing)
