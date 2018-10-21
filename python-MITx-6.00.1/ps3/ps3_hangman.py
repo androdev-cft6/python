@@ -13,7 +13,7 @@ WORDLIST_FILENAME = "words.txt"
 def loadWords():
     """
     Returns a list of valid words. Words are strings of lowercase letters.
-    
+
     Depending on the size of the word list, this function may
     take a while to finish.
     """
@@ -49,14 +49,14 @@ def isWordGuessed(secretWord, lettersGuessed):
     returns: boolean, True if all the letters of secretWord are in lettersGuessed;
       False otherwise
     '''
-    # FILL IN YOUR CODE HERE...   
+    # FILL IN YOUR CODE HERE...
     for ch in secretWord:
         if ch not in lettersGuessed:
             gessed=False
             break
         else:
             gessed=True
-    return gessed      
+    return gessed
 
 def getGuessedWord(secretWord, lettersGuessed):
     '''
@@ -72,7 +72,7 @@ def getGuessedWord(secretWord, lettersGuessed):
             strTemp+=ch
         else:
             strTemp+="_ "
-    
+
     return strTemp
 
 import string  # to get ascii letters
@@ -94,34 +94,36 @@ def selectLevel():
     print("There are three difficulty levels, Please choose one")
     level=input("Easy-1 Medium-2 Advanced-3 ==> ")
     return int(level)
-    
+
+def guessLetter(MAX_TRIES, mistakesMade, availableLetters, guessedWord):
+    print("\n" +"-"*50 + "\n")
+    print("You have " + str(MAX_TRIES-mistakesMade) + " guesses left")
+    print("Available letters: " + availableLetters)
+    print("Your word looks like this: " + guessedWord)
+    return input("Please guess a letter -> ").lower()        
+
 def hangman(secretWord):
+    '''
+    secretWord: string, the secret word to guess.
+    Starts up an interactive game of Hangman.
+    * At the start of the game, let the user know how many
+      letters the secretWord contains.
+    * Ask the user to supply one guess (i.e. letter) per round.
+    * The user should receive feedback immediately after each guess
+      about whether their guess appears in the computers word.
+    * After each round, you should also display to the user the
+      partially guessed word so far, as well as letters that the
+      user has not yet guessed.
+    Follows the other limitations detailed in the problem write-up.
+    '''
+    # FILL IN YOUR CODE HERE...
     import winsound
     import time
     from PIL import Image
-    '''
-    secretWord: string, the secret word to guess.
-
-    Starts up an interactive game of Hangman.
-
-    * At the start of the game, let the user know how many 
-      letters the secretWord contains.
-
-    * Ask the user to supply one guess (i.e. letter) per round.
-
-    * The user should receive feedback immediately after each guess 
-      about whether their guess appears in the computers word.
-
-    * After each round, you should also display to the user the 
-      partially guessed word so far, as well as letters that the 
-      user has not yet guessed.
-
-    Follows the other limitations detailed in the problem write-up.
-    '''
-    # FILL IN YOUR CODE HERE...                            
+    
     lettersGuessed=[]
     level=selectLevel()
-    
+
     if level==1:
         MAX_TRIES=30
     elif level==2:
@@ -130,33 +132,29 @@ def hangman(secretWord):
         MAX_TRIES=len(secretWord)
     else:
         MAX_TRIES=10
-    
+
     mistakesMade=0
-    availableLetters=getAvailableLetters(lettersGuessed) 
+    availableLetters=getAvailableLetters(lettersGuessed)
     guessedWord=getGuessedWord(secretWord, lettersGuessed)
-    
+    guessedLetter=""
+
     print("Welcome to the game, Hangman!")
-    print("I'm thinking of a word that is " + str(len(secretWord)) + 
-          " letters long")    
+    print("I'm thinking of a word that is " + str(len(secretWord)) +
+          " letters long")
 
     print(secretWord)
-                             
+
     while not isWordGuessed(secretWord, lettersGuessed):
-        print("\n" +"-"*50 + "\n")
-        print("You have " + str(MAX_TRIES-mistakesMade) + " guessed left")
-        print("Available letters: " + availableLetters)
-        print("Your word looks like this: " + guessedWord)
-        guessedLetter=input("Please guess a letter -> ").lower()
+        guessedLetter=guessLetter(MAX_TRIES, mistakesMade, availableLetters, guessedWord)
 
         while guessedLetter in lettersGuessed:
-            print("Oops, you've already guessed this letter " + guessedLetter)
+            print("\nOops, you've already guessed this letter " + guessedLetter)
             winsound.MessageBeep(winsound.MB_ICONHAND)
-            print("Available letters: " + availableLetters)
-            guessedLetter=input("Please guess a letter -> ").lower()                    
-        
+            guessedLetter=guessLetter(MAX_TRIES, mistakesMade, availableLetters, guessedWord)
+
         lettersGuessed.append(guessedLetter)
         availableLetters=getAvailableLetters(lettersGuessed)
-                    
+
         if guessedLetter in secretWord:
             guessedWord=getGuessedWord(secretWord, lettersGuessed)
             print("Good guess!!!")
@@ -165,15 +163,15 @@ def hangman(secretWord):
             mistakesMade+=1
             print("Oops, you guessed wrong.")
             winsound.MessageBeep(winsound.MB_ICONHAND)
-                                        
+
         if mistakesMade>=MAX_TRIES:
             print("\nYou lost. Secret word was: " + secretWord)
             print("Game over!")
             time.sleep(1.5)
-            winsound.PlaySound("soundSadtrombone.wav",winsound.SND_ASYNC)  
+            winsound.PlaySound("soundSadtrombone.wav",winsound.SND_ASYNC)
             Image.open("hangman.jpg").show()
             break
-    
+
     if isWordGuessed(secretWord,lettersGuessed):
         print("You guessed right! -> " + guessedWord)
         print("You won!")
@@ -181,6 +179,6 @@ def hangman(secretWord):
         time.sleep(1.5)
         Image.open("fireworks.jpg").show()
 
-# Running the program        
-secretWord = chooseWord(wordlist).lower()       
+# Running the program
+secretWord = chooseWord(wordlist).lower()
 hangman(secretWord)
