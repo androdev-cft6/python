@@ -1,6 +1,5 @@
 # Hangman game
 #
-
 # -----------------------------------
 # Helper code
 # You don't need to understand this helper code,
@@ -59,8 +58,6 @@ def isWordGuessed(secretWord, lettersGuessed):
             gessed=True
     return gessed      
 
-
-
 def getGuessedWord(secretWord, lettersGuessed):
     '''
     secretWord: string, the word the user is guessing
@@ -93,14 +90,11 @@ def getAvailableLetters(lettersGuessed):
     return ''.join(listAllChar)
 
     # FILL IN YOUR CODE HERE...
-
 def selectLevel():
     print("There are three difficulty levels, Please choose one")
     level=input("Easy-1 Medium-2 Advanced-3 ==> ")
     return int(level)
     
-
-
 def hangman(secretWord):
     import winsound
     import time
@@ -124,8 +118,7 @@ def hangman(secretWord):
 
     Follows the other limitations detailed in the problem write-up.
     '''
-    # FILL IN YOUR CODE HERE...    
-                         
+    # FILL IN YOUR CODE HERE...                            
     lettersGuessed=[]
     level=selectLevel()
     
@@ -152,25 +145,26 @@ def hangman(secretWord):
         print("\n" +"-"*50 + "\n")
         print("You have " + str(MAX_TRIES-mistakesMade) + " guessed left")
         print("Available letters: " + availableLetters)
-        guessed=input("Please guess a letter -> ")
-        guessedLetter=guessed.lower()
-        
-        if guessedLetter in lettersGuessed:
-            print("Oops, you've already guessed this letter \n" +
-                  getGuessedWord(secretWord, lettersGuessed))
+        print("Your word looks like this: " + guessedWord)
+        guessedLetter=input("Please guess a letter -> ").lower()
+
+        while guessedLetter in lettersGuessed:
+            print("Oops, you've already guessed this letter " + guessedLetter)
+            winsound.MessageBeep(winsound.MB_ICONHAND)
+            print("Available letters: " + availableLetters)
+            guessedLetter=input("Please guess a letter -> ").lower()                    
         
         lettersGuessed.append(guessedLetter)
         availableLetters=getAvailableLetters(lettersGuessed)
                     
         if guessedLetter in secretWord:
             guessedWord=getGuessedWord(secretWord, lettersGuessed)
-            print("Good guess \n" + guessedWord)
+            print("Good guess!!!")
             winsound.MessageBeep(winsound.MB_ICONASTERISK)
         else:
             mistakesMade+=1
-            print("Oops, you guessed wrong. \n" + guessedWord)
+            print("Oops, you guessed wrong.")
             winsound.MessageBeep(winsound.MB_ICONHAND)
-
                                         
         if mistakesMade>=MAX_TRIES:
             print("\nYou lost. Secret word was: " + secretWord)
@@ -179,18 +173,14 @@ def hangman(secretWord):
             winsound.PlaySound("soundSadtrombone.wav",winsound.SND_ASYNC)  
             Image.open("hangman.jpg").show()
             break
+    
     if isWordGuessed(secretWord,lettersGuessed):
         print("You guessed right! -> " + guessedWord)
         print("You won!")
         winsound.PlaySound("soundTaDa.wav",winsound.SND_ASYNC)
         time.sleep(1.5)
         Image.open("fireworks.jpg").show()
-        
-# When you've completed your hangman function, uncomment these two lines
-# and run this file to test! (hint: you might want to pick your own
-# secretWord while you're testing)
 
-secretWord = chooseWord(wordlist).lower()
-#secretWord='antonio' # use chooseWord(wordlist) 
-                         #when done testing            
+# Running the program        
+secretWord = chooseWord(wordlist).lower()       
 hangman(secretWord)
